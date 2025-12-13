@@ -1,4 +1,7 @@
 1. Clone repo
+1. Enter repo directory `cd Movie_Club`
+1. Setup `venv`: `python3 -m venv venv`
+1. Install Django: `pip install -U pip && pip install Django`
 1. Create Super User `python manage createsuperuser`
 1. Make migrations `python manage makemigrations`
 1. Migrate `python manage migrate`
