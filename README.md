@@ -11,6 +11,6 @@
    python manage.py loaddata people
    python manage.py loaddata categories 
    python manage.py loaddata streaming_services
-   python manage.py loaddata people
+   python manage.py loaddata movies
    ```
 1. Compile TailwindCSS `tailwind -i static/css/input -o static/css/tailwind.css`
