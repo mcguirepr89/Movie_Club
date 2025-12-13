@@ -1,0 +1,82 @@
+[
+  {
+    "model": "tracker.streamingservice",
+    "pk": 1,
+    "fields": { "name": "Netflix" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 2,
+    "fields": { "name": "Amazon Prime Video" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 3,
+    "fields": { "name": "Disney+" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 4,
+    "fields": { "name": "Hulu" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 5,
+    "fields": { "name": "Max (HBO)" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 6,
+    "fields": { "name": "Apple TV+" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 7,
+    "fields": { "name": "Paramount+" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 8,
+    "fields": { "name": "Peacock" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 9,
+    "fields": { "name": "Starz" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 10,
+    "fields": { "name": "Showtime" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 11,
+    "fields": { "name": "Tubi" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 12,
+    "fields": { "name": "Pluto TV" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 13,
+    "fields": { "name": "Amazon Freevee" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 14,
+    "fields": { "name": "Kanopy" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 15,
+    "fields": { "name": "Criterion Channel" }
+  },
+  {
+    "model": "tracker.streamingservice",
+    "pk": 16,
+    "fields": { "name": "Physical Media / Plex" }
+  }
+]

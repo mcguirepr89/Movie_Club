@@ -1,0 +1,85 @@
+{% extends "tracker/base.html" %}
+
+{% block title %}Suggest a Movie{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto mt-6 bg-white p-6 rounded-lg shadow-lg">
+    {% if suggested_movie %}
+        <div class="mt-6 bg-white mb-4 rounded-lg shadow p-5 border border-gray-200">
+            <h3 class="text-xl font-bold mb-2">Suggested Movie:</h3>
+            <p><strong>Title:</strong> {{ suggested_movie.title }}</p>
+            <p><strong>Year:</strong> {{ suggested_movie.year }}</p>
+            <p><strong>Recommended by:</strong> {% if suggested_movie.recommended_by %}{{ suggested_movie.recommended_by.name }}{% endif %}</p>
+            <p><strong>Categories:</strong> {% for c in suggested_movie.categories.all %}{{ c.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+            <p><strong>Runtime:</strong> {% if suggested_movie.runtime_minutes %}{{ suggested_movie.runtime_minutes }} min{% else %}N/A{% endif %}</p>
+            <p><strong>Streaming Services:</strong> {% for s in suggested_movie.streaming_services.all %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+            <p><strong>Director:</strong> {{ suggested_movie.director }}</p>
+            <p><strong>Writer:</strong> {{ suggested_movie.writer }}</p>
+            <p><strong>Starring:</strong> {{ suggested_movie.starring }}</p>
+            <p><strong>Description:</strong> {{ suggested_movie.description|default:"No description" }}</p>
+        </div>
+    {% endif %}
+    <h2 class="text-2xl font-bold mb-4">Suggest a Movie</h2>
+
+    <form method="post" class="space-y-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+        {% csrf_token %}
+
+        <div class="space-y-2">
+            <label for="seen_filter" class="font-semibold">Filter by Seen/Unseen:</label>
+            <select name="seen_filter" id="seen_filter" class="border rounded p-1 w-full">
+                <option value="all" {% if seen_filter == "all" %}selected{% endif %}>All</option>
+                <option value="seen" {% if seen_filter == "seen" %}selected{% endif %}>Seen</option>
+                <option value="unseen" {% if seen_filter == "unseen" %}selected{% endif %}>Unseen</option>
+            </select>
+        </div>
+
+        <div class="space-y-2">
+            <label class="font-semibold">Filter by Categories:</label>
+            <div class="flex flex-wrap gap-2">
+                {% for category in categories %}
+                    <label class="flex items-center space-x-1">
+                        <input type="checkbox" name="categories" value="{{ category.id }}"
+                               {% if category.id in selected_categories %}checked{% endif %}>
+                        <span>{{ category.name }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="space-y-2">
+            <label for="writer" class="font-semibold">Filter by Writer:</label>
+            <select name="writer" id="writer" class="border rounded p-1 w-full">
+                <option value="">Any</option>
+                {% for w in writers %}
+                    <option value="{{ w }}" {% if w == writer_filter %}selected{% endif %}>{{ w }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="space-y-2">
+            <label for="director" class="font-semibold">Filter by Director:</label>
+            <select name="director" id="director" class="border rounded p-1 w-full">
+                <option value="">Any</option>
+                {% for d in directors %}
+                    <option value="{{ d }}" {% if d == director_filter %}selected{% endif %}>{{ d }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="space-y-2">
+            <label for="starring" class="font-semibold">Filter by Starring:</label>
+            <select name="starring" id="starring" class="border rounded p-1 w-full">
+                <option value="">Any</option>
+                {% for s in starring_list %}
+                    <option value="{{ s }}" {% if s == starring_filter %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+            Suggest Movie
+        </button>
+    </form>
+
+</div>
+{% endblock %}

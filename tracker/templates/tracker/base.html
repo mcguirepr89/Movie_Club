@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% load dict_extras person_extras %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Holiday Movie Club{% endblock %}</title>
+    <link href="{% static 'css/tailwind.css' %}" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+    <header class="bg-red-600 text-white p-4 shadow-md">
+        <nav class="flex flex-wrap items-center justify-between mb-2">
+            <div class="space-x-4">
+                <a href="{% url 'who_are_you' %}" class="hover:underline">Change User</a>
+                <a href="{% url 'movie_list' %}" class="hover:underline">Movie List</a>
+                <a href="{% url 'add_movie' %}" class="hover:underline">Add Movie</a>
+                <a href="{% url 'movie_suggest' %}" class="hover:underline">Suggest Movie</a>
+            </div>
+        </nav>
+        <h1 class="text-3xl font-bold">🎄 Holiday Movie Club</h1>
+        {% if request.session.person_id %}
+            {% with person=request.session.person_id|default_if_none:"" %}
+                <p class="mt-1 text-sm">Current User: {{ person|get_person_name }}</p>
+            {% endwith %}
+        {% endif %}
+    </header>
+
+    <main class="flex-1 container mx-auto px-4 py-6">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-gray-200 text-gray-700 p-4 mt-auto text-center text-sm">
+        <p>🎄 Holiday Movie Club &copy; {% now "Y" %}</p>
+        <p>Made by <a href="https://pmcgui.xyz" class="text-blue-600 hover:underline">Patrick McGuire</a></p>
+    </footer>
+
+</body>
+</html>
