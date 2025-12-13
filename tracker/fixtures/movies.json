@@ -3,23 +3,6 @@
     "model": "tracker.movie",
     "pk": 1,
     "fields": {
-      "title": "Home Alone",
-      "year": 1990,
-      "description": "An eight-year-old troublemaker must protect his home from a pair of bungling burglars when his family leaves him home alone for Christmas.",
-      "runtime_minutes": 103,
-      "director": "Chris Columbus",
-      "writer": "John Hughes",
-      "starring": "Macaulay Culkin, Joe Pesci, Daniel Stern, Catherine O'Hara",
-      "categories": [1, 4, 8],
-      "streaming_services": [1, 2],
-      "created_at": "2025-12-13T00:00:00Z",
-      "recommended_by": "1"
-    }
-  },
-  {
-    "model": "tracker.movie",
-    "pk": 2,
-    "fields": {
       "title": "Elf",
       "year": 2003,
       "description": "A human raised as an elf at the North Pole travels to New York City to find his biological father.",
@@ -35,7 +18,7 @@
   },
   {
     "model": "tracker.movie",
-    "pk": 3,
+    "pk": 2,
     "fields": {
       "title": "The Muppet Christmas Carol",
       "year": 1992,
@@ -52,41 +35,7 @@
   },
   {
     "model": "tracker.movie",
-    "pk": 4,
-    "fields": {
-      "title": "Love Actually",
-      "year": 2003,
-      "description": "Follows the lives of eight very different couples dealing with love during the Christmas season.",
-      "runtime_minutes": 135,
-      "director": "Richard Curtis",
-      "writer": "Richard Curtis",
-      "starring": "Hugh Grant, Emma Thompson, Colin Firth, Keira Knightley",
-      "categories": [2, 3],
-      "streaming_services": [1, 2],
-      "created_at": "2025-12-13T00:00:00Z",
-      "recommended_by": "1"
-    }
-  },
-  {
-    "model": "tracker.movie",
-    "pk": 5,
-    "fields": {
-      "title": "Die Hard",
-      "year": 1988,
-      "description": "An NYPD officer tries to save his wife and several others taken hostage during a Christmas party.",
-      "runtime_minutes": 132,
-      "director": "John McTiernan",
-      "writer": "Jeb Stuart, Steven E. de Souza",
-      "starring": "Bruce Willis, Alan Rickman",
-      "categories": [6, 8],
-      "streaming_services": [5],
-      "created_at": "2025-12-13T00:00:00Z",
-      "recommended_by": "1"
-    }
-  },
-  {
-    "model": "tracker.movie",
-    "pk": 6,
+    "pk": 3,
     "fields": {
       "title": "The Nightmare Before Christmas",
       "year": 1993,
@@ -103,7 +52,7 @@
   },
   {
     "model": "tracker.movie",
-    "pk": 7,
+    "pk": 4,
     "fields": {
       "title": "A Christmas Story",
       "year": 1983,
@@ -114,57 +63,6 @@
       "starring": "Peter Billingsley, Darren McGavin",
       "categories": [1, 4, 8],
       "streaming_services": [5],
-      "created_at": "2025-12-13T00:00:00Z",
-      "recommended_by": "1"
-    }
-  },
-  {
-    "model": "tracker.movie",
-    "pk": 8,
-    "fields": {
-      "title": "Klaus",
-      "year": 2019,
-      "description": "A simple act of kindness sparks an endless chain of goodwill in a snowy town.",
-      "runtime_minutes": 96,
-      "director": "Sergio Pablos",
-      "writer": "Sergio Pablos",
-      "starring": "Jason Schwartzman, J.K. Simmons",
-      "categories": [3, 4, 5],
-      "streaming_services": [1],
-      "created_at": "2025-12-13T00:00:00Z",
-      "recommended_by": "1"
-    }
-  },
-  {
-    "model": "tracker.movie",
-    "pk": 9,
-    "fields": {
-      "title": "Gremlins",
-      "year": 1984,
-      "description": "A young man receives a strange creature as a pet, which spawns other creatures that transform into monsters.",
-      "runtime_minutes": 106,
-      "director": "Joe Dante",
-      "writer": "Chris Columbus",
-      "starring": "Zach Galligan, Phoebe Cates",
-      "categories": [6, 9, 8],
-      "streaming_services": [5],
-      "created_at": "2025-12-13T00:00:00Z",
-      "recommended_by": "1"
-    }
-  },
-  {
-    "model": "tracker.movie",
-    "pk": 10,
-    "fields": {
-      "title": "It's a Wonderful Life",
-      "year": 1946,
-      "description": "An angel helps a compassionate but despairingly frustrated businessman by showing him what life would have been like without him.",
-      "runtime_minutes": 130,
-      "director": "Frank Capra",
-      "writer": "Frances Goodrich, Albert Hackett",
-      "starring": "James Stewart, Donna Reed",
-      "categories": [3, 8],
-      "streaming_services": [16],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": "1"
     }

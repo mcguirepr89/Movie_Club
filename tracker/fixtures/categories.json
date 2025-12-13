@@ -8,5 +8,9 @@
   { "model": "tracker.category", "pk": 7, "fields": { "name": "Fantasy" } },
   { "model": "tracker.category", "pk": 8, "fields": { "name": "Classic" } },
   { "model": "tracker.category", "pk": 9, "fields": { "name": "Stupid Fun" } },
-  { "model": "tracker.category", "pk": 10, "fields": { "name": "Musical" } }
+  { "model": "tracker.category", "pk": 10, "fields": { "name": "Musical" } },
+  { "model": "tracker.category", "pk": 11, "fields": { "name": "Gay" } },
+  { "model": "tracker.category", "pk": 12, "fields": { "name": "Romantic" } },
+  { "model": "tracker.category", "pk": 13, "fields": { "name": "Camp" } },
+  { "model": "tracker.category", "pk": 14, "fields": { "name": "Hijinks" } }
 ]

@@ -1,0 +1,121 @@
+[
+  {
+    "model": "tracker.movie",
+    "pk": 101,
+    "fields": {
+      "title": "The Holiday",
+      "year": 2006,
+      "description": "Two women from different countries swap homes for the holidays and unexpectedly find love.",
+      "runtime_minutes": 136,
+      "director": "Nancy Meyers",
+      "writer": "Nancy Meyers",
+      "starring": "Cameron Diaz, Kate Winslet, Jude Law, Jack Black",
+      "categories": [2, 3],
+      "streaming_services": [2, 5, 16],
+      "created_at": "2025-12-13T00:00:00Z",
+      "recommended_by": "2"
+    }
+  },
+  {
+    "model": "tracker.movie",
+    "pk": 102,
+    "fields": {
+      "title": "Happiest Season",
+      "year": 2020,
+      "description": "A woman plans to propose to her girlfriend during a Christmas visit, only to discover she hasn’t come out to her conservative parents.",
+      "runtime_minutes": 102,
+      "director": "Clea DuVall",
+      "writer": "Clea DuVall, Mary Holland",
+      "starring": "Kristen Stewart, Mackenzie Davis, Alison Brie, Dan Levy",
+      "categories": [2, 3],
+      "streaming_services": [4, 16],
+      "created_at": "2025-12-13T00:00:00Z",
+      "recommended_by": "2"
+    }
+  },
+  {
+    "model": "tracker.movie",
+    "pk": 103,
+    "fields": {
+      "title": "Carol",
+      "year": 2015,
+      "description": "An aspiring photographer develops an intimate relationship with an older woman in 1950s New York.",
+      "runtime_minutes": 118,
+      "director": "Todd Haynes",
+      "writer": "Phyllis Nagy",
+      "starring": "Cate Blanchett, Rooney Mara",
+      "categories": [3, 8],
+      "streaming_services": [15, 16],
+      "created_at": "2025-12-13T00:00:00Z",
+      "recommended_by": "2"
+    }
+  },
+  {
+    "model": "tracker.movie",
+    "pk": 104,
+    "fields": {
+      "title": "Home Alone",
+      "year": 1990,
+      "description": "An eight-year-old troublemaker must protect his home from two bungling burglars after being left behind at Christmas.",
+      "runtime_minutes": 103,
+      "director": "Chris Columbus",
+      "writer": "John Hughes",
+      "starring": "Macaulay Culkin, Joe Pesci, Daniel Stern, Catherine O'Hara",
+      "categories": [1, 4, 8],
+      "streaming_services": [3, 16],
+      "created_at": "2025-12-13T00:00:00Z",
+      "recommended_by": "2"
+    }
+  },
+  {
+    "model": "tracker.movie",
+    "pk": 105,
+    "fields": {
+      "title": "Home Alone 2: Lost in New York",
+      "year": 1992,
+      "description": "Kevin McCallister finds himself alone in New York City and once again faces off against the Wet Bandits.",
+      "runtime_minutes": 120,
+      "director": "Chris Columbus",
+      "writer": "John Hughes",
+      "starring": "Macaulay Culkin, Joe Pesci, Daniel Stern, Catherine O'Hara",
+      "categories": [1, 4],
+      "streaming_services": [3, 16],
+      "created_at": "2025-12-13T00:00:00Z",
+      "recommended_by": "2"
+    }
+  },
+  {
+    "model": "tracker.movie",
+    "pk": 106,
+    "fields": {
+      "title": "Home Alone 3",
+      "year": 1997,
+      "description": "A young boy defends his house from international spies who mistake his toy car for a classified device.",
+      "runtime_minutes": 102,
+      "director": "Raja Gosnell",
+      "writer": "John Hughes",
+      "starring": "Alex D. Linz, Olek Krupa",
+      "categories": [1, 4],
+      "streaming_services": [3, 16],
+      "created_at": "2025-12-13T00:00:00Z",
+      "recommended_by": "2"
+    }
+  },
+  {
+    "model": "tracker.movie",
+    "pk": 107,
+    "fields": {
+      "title": "Snow Day",
+      "year": 2000,
+      "description": "A group of kids plan to keep schools closed by preventing the snowplow driver from clearing the streets.",
+      "runtime_minutes": 89,
+      "director": "Chris Koch",
+      "writer": "Will McRobb, Chris Viscardi",
+      "starring": "Chevy Chase, Mark Webber, Schuyler Fisk",
+      "categories": [1, 4, 9],
+      "streaming_services": [7, 16],
+      "created_at": "2025-12-13T00:00:00Z",
+      "recommended_by": "2"
+    }
+  }
+]
