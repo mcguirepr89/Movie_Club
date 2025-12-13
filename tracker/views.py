@@ -33,19 +33,20 @@ def movie_list(request):
 
     current_user = get_object_or_404(Person, pk=request.session["person_id"])
 
-    # Prefetch categories, streaming services, viewings
     movies = Movie.objects.prefetch_related(
-        "categories", "streaming_services", "viewing_set__person"
-    ).all()
+        "categories", "streaming_services"
+    )
 
-    # All viewings mapped by movie id
-    viewings = Viewing.objects.select_related("person").all()
+    viewings = Viewing.objects.select_related("person", "movie")
+
     viewing_map = {}
-    for v in viewings:
-        viewing_map.setdefault(v.movie_id, []).append(v)
+    current_user_viewings = {}
 
-    # Current user viewings
-    current_user_viewings = {v.movie_id: v for v in viewings if v.person_id == current_user.id}
+    for v in viewings:
+        if v.person_id == current_user.id:
+            current_user_viewings[v.movie_id] = v
+        else:
+            viewing_map.setdefault(v.movie_id, []).append(v)
 
     return render(
         request,
@@ -53,8 +54,8 @@ def movie_list(request):
         {
             "movies": movies,
             "current_user": current_user,
-            "viewing_map": viewing_map,
             "current_user_viewings": current_user_viewings,
+            "viewing_map": viewing_map,
         },
     )
 

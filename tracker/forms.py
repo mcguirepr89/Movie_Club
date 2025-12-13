@@ -1,7 +1,42 @@
 from django import forms
-from .models import Movie, Viewing, Category, StreamingService
+from .models import Movie, Viewing
 
-class MovieForm(forms.ModelForm):
+
+class TailwindFormMixin:
+    BASE_INPUT_CLASSES = (
+        "block w-full rounded-md border border-gray-300 "
+        "px-3 py-2 shadow-sm "
+        "focus:border-indigo-500 focus:ring-indigo-500"
+    )
+
+    TEXTAREA_CLASSES = (
+        "block w-full rounded-md border border-gray-300 "
+        "px-3 py-2 shadow-sm "
+        "focus:border-indigo-500 focus:ring-indigo-500"
+    )
+
+    CHECKBOX_GROUP_CLASSES = "space-y-2"
+
+    def apply_tailwind_classes(self):
+        for field in self.fields.values():
+            widget = field.widget
+            existing = widget.attrs.get("class", "")
+
+            if isinstance(widget, forms.CheckboxSelectMultiple):
+                widget.attrs["class"] = f"{existing} {self.CHECKBOX_GROUP_CLASSES}".strip()
+
+            elif isinstance(widget, forms.Textarea):
+                widget.attrs["class"] = f"{existing} {self.TEXTAREA_CLASSES}".strip()
+
+            else:
+                widget.attrs["class"] = f"{existing} {self.BASE_INPUT_CLASSES}".strip()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_tailwind_classes()
+
+
+class MovieForm(TailwindFormMixin, forms.ModelForm):
     class Meta:
         model = Movie
         fields = [
@@ -16,12 +51,13 @@ class MovieForm(forms.ModelForm):
             "streaming_services",
         ]
         widgets = {
-            "categories": forms.CheckboxSelectMultiple,
-            "streaming_services": forms.CheckboxSelectMultiple,
+            "categories": forms.CheckboxSelectMultiple(),
+            "streaming_services": forms.CheckboxSelectMultiple(),
+            "description": forms.Textarea(attrs={"rows": 4}),
         }
 
 
-class ViewingForm(forms.ModelForm):
+class ViewingForm(TailwindFormMixin, forms.ModelForm):
     class Meta:
         model = Viewing
         fields = ["watched_on", "rating", "comment"]
