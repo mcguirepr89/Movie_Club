@@ -3,6 +3,7 @@
 1. Setup `venv`: `python3 -m venv venv`
 1. Activate venv: `source ./venv/bin/activate`
 1. Install requirements: `pip install -U pip && pip install -r requirements.txt`
+1. Rename the DEVELOPMENT ONLY `settings.py`: `mv movie_club/settings.py.fordevelopmentonly movie_club/settings.py`
 1. Make migrations `python manage.py makemigrations`
 1. Migrate `python manage.py migrate`
 1. Load fixtures:
@@ -37,6 +38,7 @@ python3 -m venv venv && \
 source ./venv/bin/activate && \
 pip install -U pip && \
 pip install -r requirements.txt && \
+mv movie_club/settings.py.fordevelopmentonly movie_club/settings.py && \
 python manage.py makemigrations && \
 python manage.py migrate && \
 python manage.py createsuperuser && \
