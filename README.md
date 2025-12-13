@@ -13,7 +13,7 @@
    python manage.py loaddata streaming_services
    python manage.py loaddata movies
    ```
-
+1. Run the development server: `python manage.py runserver`
 
 Create a superuser if you want to access the admin panel:
 ```
@@ -41,9 +41,9 @@ pip install -r requirements.txt && \
 mv movie_club/settings.py.fordevelopmentonly movie_club/settings.py && \
 python manage.py makemigrations && \
 python manage.py migrate && \
-python manage.py createsuperuser && \
 python manage.py loaddata people && \
 python manage.py loaddata categories && \
 python manage.py loaddata streaming_services && \
-python manage.py loaddata movies
+python manage.py loaddata movies && \
+python manage.py runserver
 ```
