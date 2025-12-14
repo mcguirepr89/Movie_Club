@@ -4,6 +4,11 @@
 
 {% block content %}
 <div class="max-w-3xl mx-auto mt-6">
+    {% if movie.poster %}                                                                                                                     
+        <div class="mb-3">                                                                                                                    
+            <img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster" class="w-full h-auto rounded">                                   
+        </div>                                                                                                                                
+    {% endif %} 
     <h2 class="text-2xl font-bold mb-4 flex items-center">
         {{ movie.title }}
         {% if current_user_viewing %}
@@ -36,7 +41,7 @@
     </div>
 
     <h3 class="text-xl font-semibold mb-2">Your Viewing</h3>
-    <form method="post" class="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-6">
+    <form method="post" enctype="multipart/form-data" class="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-6">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="bg-green-600 text-white py-1 px-4 rounded hover:bg-green-700">

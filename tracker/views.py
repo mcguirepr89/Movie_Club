@@ -89,7 +89,7 @@ def movie_detail(request, movie_id):
 @login_required
 def add_movie(request):
     if request.method == "POST":
-        movie_form = MovieForm(request.POST)
+        movie_form = MovieForm(request.POST, request.FILES)
         viewing_form = ViewingForm(request.POST)
 
         if movie_form.is_valid() and viewing_form.is_valid():
@@ -122,7 +122,7 @@ def movie_edit(request, movie_id):
     movie = get_object_or_404(Movie, pk=movie_id)
 
     if request.method == "POST":
-        form = MovieForm(request.POST, instance=movie)
+        form = MovieForm(request.POST, request.FILES, instance=movie)
         if form.is_valid():
             form.save()
             return redirect("movie_detail", movie_id=movie.id)

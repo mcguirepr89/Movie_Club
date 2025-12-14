@@ -1,3 +1,6 @@
+import os
+from django.dispatch import receiver
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -26,7 +29,6 @@ class StreamingService(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Movie(models.Model):
     title = models.CharField(max_length=200)
@@ -65,7 +67,21 @@ class Movie(models.Model):
         StreamingService, related_name="movies", blank=True
     )
 
+    poster = models.ImageField(
+        upload_to="posters/",
+        blank=True,
+        null=True,
+        help_text="Upload a movie poster image"
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_instance = Movie.objects.get(pk=self.pk)
+            if old_instance.poster and old_instance.poster != self.poster:
+                old_instance.poster.delete(save=False)
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ["title"]
@@ -73,6 +89,11 @@ class Movie(models.Model):
     def __str__(self):
         return self.title
 
+@receiver(models.signals.post_delete, sender=Movie)
+def auto_delete_movie_poster_on_delete(sender, instance, **kwargs):
+    if instance.poster:
+        if os.path.isfile(instance.poster.path):
+            os.remove(instance.poster.path)
 
 class Viewing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

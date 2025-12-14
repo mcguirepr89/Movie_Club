@@ -54,6 +54,7 @@ class MovieForm(TailwindFormMixin, forms.ModelForm):
             "writer",
             "categories",
             "streaming_services",
+	    "poster",
         ]
         widgets = {
             "categories": forms.CheckboxSelectMultiple(),

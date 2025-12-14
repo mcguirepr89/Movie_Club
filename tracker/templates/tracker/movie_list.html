@@ -11,6 +11,11 @@
         {% with viewing=current_user_viewings|get:movie.id %}
         <div class="bg-white rounded-lg shadow p-5 flex flex-col justify-between">
             <div>
+            {% if movie.poster %}
+                <div class="mb-3 flex justify-center">
+                    <a href="{% url 'movie_detail' movie.id %}"><img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster" class="w-48 h-auto rounded shadow-sm object-cover"></a>
+                </div>
+            {% endif %}
                 <h3 class="text-xl font-semibold mb-2 flex items-center justify-between">
                     <a href="{% url 'movie_detail' movie.id %}" class="hover:underline">{{ movie.title }}</a>
                     {% if request.user.is_authenticated %}
