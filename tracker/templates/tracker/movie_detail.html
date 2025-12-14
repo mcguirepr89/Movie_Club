@@ -27,7 +27,7 @@
         <p><strong>Starring:</strong> {{ movie.starring }}</p>
         <p><strong>Director:</strong> {{ movie.director }}</p>
         <p><strong>Writer:</strong> {{ movie.writer }}</p>
-        <p><strong>Recommended by:</strong> {% if movie.recommended_by %}{{ movie.recommended_by.username }}{% endif %}</p>
+        <p><strong>Recommended by:</strong> {% if movie.recommended_by %}{{ movie.recommended_by.first_name }}{% endif %}</p>
     </div>
 
     {% if user.is_authenticated %}
@@ -59,7 +59,7 @@
         <ul class="space-y-2">
             {% for v in other_viewings %}
                 <li class="border-b border-gray-200 pb-2">
-                    <strong>{{ v.user.username }}:</strong>
+                    <strong>{{ v.user.first_name }}:</strong>
                     {% if v.watched_on %}Watched on {{ v.watched_on }}{% else %}Not marked{% endif %};
                     {% if v.rating %}Rating: {{ v.rating }}{% endif %};
                     {% if v.comment %}Comment: {{ v.comment }}{% endif %}
