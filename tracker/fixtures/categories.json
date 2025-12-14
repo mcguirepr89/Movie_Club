@@ -12,5 +12,6 @@
   { "model": "tracker.category", "pk": 11, "fields": { "name": "Gay" } },
   { "model": "tracker.category", "pk": 12, "fields": { "name": "Romantic" } },
   { "model": "tracker.category", "pk": 13, "fields": { "name": "Camp" } },
-  { "model": "tracker.category", "pk": 14, "fields": { "name": "Hijinks" } }
+  { "model": "tracker.category", "pk": 14, "fields": { "name": "Hijinks" } },
+  { "model": "tracker.category", "pk": 15, "fields": { "name": "Slapstick" } }
 ]

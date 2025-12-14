@@ -13,7 +13,7 @@
       "categories": [1, 4, 9],
       "streaming_services": [1, 5],
       "created_at": "2025-12-13T00:00:00Z",
-      "recommended_by": "1"
+      "recommended_by": 1
     }
   },
   {
@@ -30,7 +30,7 @@
       "categories": [3, 4, 8, 10],
       "streaming_services": [3],
       "created_at": "2025-12-13T00:00:00Z",
-      "recommended_by": "1"
+      "recommended_by": 1
     }
   },
   {
@@ -47,7 +47,7 @@
       "categories": [5, 7, 10],
       "streaming_services": [3],
       "created_at": "2025-12-13T00:00:00Z",
-      "recommended_by": "1"
+      "recommended_by": 1
     }
   },
   {
@@ -64,7 +64,7 @@
       "categories": [1, 4, 8],
       "streaming_services": [5],
       "created_at": "2025-12-13T00:00:00Z",
-      "recommended_by": "1"
+      "recommended_by": 1
     }
   }
 ]

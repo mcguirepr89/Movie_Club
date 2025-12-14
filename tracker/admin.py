@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Person, Category, StreamingService, Movie, Viewing
+from django.contrib.auth.models import User
+from .models import Category, StreamingService, Movie, Viewing
 
 
 # -----------------------------
@@ -8,9 +9,9 @@ from .models import Person, Category, StreamingService, Movie, Viewing
 class ViewingInline(admin.TabularInline):
     model = Viewing
     extra = 1  # Show one empty form by default for adding new viewing
-    fields = ("person", "watched_on", "rating", "comment", "created_at")
+    fields = ("user", "watched_on", "rating", "comment", "created_at")
     readonly_fields = ("created_at",)
-    autocomplete_fields = ("person",)
+    autocomplete_fields = ("user",)
     ordering = ("-created_at",)
     show_change_link = True
 
@@ -30,7 +31,7 @@ class MovieAdmin(admin.ModelAdmin):
     list_filter = ("categories", "streaming_services", "recommended_by")
     search_fields = ("title", "director", "writer", "starring")
     ordering = ("title",)
-    inlines = [ViewingInline]  # <-- Viewing inline added
+    inlines = [ViewingInline]
     autocomplete_fields = ("recommended_by", "categories", "streaming_services")
 
     def display_categories(self, obj):
@@ -45,25 +46,16 @@ class MovieAdmin(admin.ModelAdmin):
 
 
 # -----------------------------
-# Viewing Admin (optional standalone)
+# Viewing Admin
 # -----------------------------
 @admin.register(Viewing)
 class ViewingAdmin(admin.ModelAdmin):
-    list_display = ("person", "movie", "watched_on", "rating", "comment", "created_at")
-    list_filter = ("watched_on", "rating", "movie", "person")
-    search_fields = ("movie__title", "person__name", "comment")
-    autocomplete_fields = ("person", "movie")
+    list_display = ("user", "movie", "watched_on", "rating", "comment", "created_at")
+    list_filter = ("watched_on", "rating", "movie", "user")
+    search_fields = ("movie__title", "user__username", "comment")
+    autocomplete_fields = ("user", "movie")
     readonly_fields = ("created_at",)
     ordering = ("-created_at",)
-
-
-# -----------------------------
-# Person Admin
-# -----------------------------
-@admin.register(Person)
-class PersonAdmin(admin.ModelAdmin):
-    list_display = ("name",)
-    search_fields = ("name",)
 
 
 # -----------------------------

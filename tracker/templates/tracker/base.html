@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-{% load dict_extras person_extras %}
 {% load static %}
 <html lang="en">
 <head>
@@ -13,18 +12,30 @@
     <header class="bg-red-600 text-white p-4 shadow-md">
         <nav class="flex flex-wrap items-center justify-between mb-2">
             <div class="space-x-4">
-                <a href="{% url 'who_are_you' %}" class="hover:underline">Change User</a>
                 <a href="{% url 'movie_list' %}" class="hover:underline">Movie List</a>
-                <a href="{% url 'add_movie' %}" class="hover:underline">Add Movie</a>
                 <a href="{% url 'movie_suggest' %}" class="hover:underline">Suggest Movie</a>
+
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'add_movie' %}" class="hover:underline">Add Movie</a>
+                {% endif %}
+            </div>
+
+            <div class="space-x-4 text-sm">
+                {% if request.user.is_authenticated %}
+                    <span class="opacity-90">
+                        Logged in as <strong>{{ request.user.username }}</strong>
+                    </span>
+		    <form action="{% url 'logout' %}" method="post">
+		        {% csrf_token %}
+		        <button class="cursor-pointer hover:underline" type="submit">Logout</button>
+		    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="hover:underline">Log in</a>
+                {% endif %}
             </div>
         </nav>
+
         <h1 class="text-3xl font-bold">🎄 Holiday Movie Club</h1>
-        {% if request.session.person_id %}
-            {% with person=request.session.person_id|default_if_none:"" %}
-                <p class="mt-1 text-sm">Current User: {{ person|get_person_name }}</p>
-            {% endwith %}
-        {% endif %}
     </header>
 
     <main class="flex-1 container mx-auto px-4 py-6">
@@ -34,7 +45,12 @@
 
     <footer class="bg-gray-200 text-gray-700 p-4 mt-auto text-center text-sm">
         <p>🎄 Holiday Movie Club &copy; {% now "Y" %}</p>
-        <p>Made by <a href="https://pmcgui.xyz" class="text-blue-600 hover:underline">Patrick McGuire</a></p>
+        <p>
+            Made by
+            <a href="https://pmcgui.xyz" class="text-blue-600 hover:underline">
+                Patrick McGuire
+            </a>
+        </p>
     </footer>
 
 </body>

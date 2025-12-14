@@ -1,12 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
-
-
-class Person(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.name
 
 
 class Category(models.Model):
@@ -58,10 +52,12 @@ class Movie(models.Model):
     )
 
     recommended_by = models.ForeignKey(
-        Person,
+        User,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name="recommended_movies",
+        help_text="User who recommended this movie",
     )
 
     categories = models.ManyToManyField(Category, related_name="movies", blank=True)
@@ -79,7 +75,7 @@ class Movie(models.Model):
 
 
 class Viewing(models.Model):
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
     watched_on = models.DateField(blank=True, null=True)
@@ -96,8 +92,8 @@ class Viewing(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("person", "movie")
+        unique_together = ("user", "movie")
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"{self.person} watched {self.movie}"
+        return f"{self.user} watched {self.movie}"

@@ -13,33 +13,39 @@
             <div>
                 <h3 class="text-xl font-semibold mb-2 flex items-center justify-between">
                     <a href="{% url 'movie_detail' movie.id %}" class="hover:underline">{{ movie.title }}</a>
-                    {% if viewing %}<span class="text-green-600 font-bold">✅</span>{% else %}<span class="text-gray-400 font-bold">❌</span>{% endif %}
+                    {% if request.user.is_authenticated %}
+                        <span id="icon-{{ movie.id }}" class="ml-2 font-bold">
+                            {% if viewing %}✅{% else %}❌{% endif %}
+                        </span>
+                    {% endif %}
                 </h3>
 
                 <p class="text-sm text-gray-600 mb-1"><strong>Year:</strong> {{ movie.year }}</p>
-                <p class="text-sm text-gray-600 mb-1"><strong>Recommended by:</strong> {% if movie.recommended_by %}{{ movie.recommended_by.name }}{% endif %}</p>
+                <p class="text-sm text-gray-600 mb-1"><strong>Recommended by:</strong> {% if movie.recommended_by %}{{ movie.recommended_by.first_name }}{% endif %}</p>
                 <p class="text-sm text-gray-600 mb-1"><strong>Categories:</strong> 
                     {% for c in movie.categories.all %}{{ c.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
                 </p>
 
-                <p class="mt-3">
+                {% if request.user.is_authenticated %}
+                <p class="mt-3" id="seen-section-{{ movie.id }}">
                     {% if viewing %}
-                        <span class="font-semibold text-green-700">Seen</span>
-                        <form action="{% url 'toggle_seen' movie.id %}" method="post" class="inline">
+                        <span class="font-semibold text-green-700" id="status-{{ movie.id }}">I've seen it!</span>
+                        <form class="seen-toggle-form inline" data-movie-id="{{ movie.id }}" method="post" action="{% url 'toggle_seen' movie.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="text-red-600 hover:underline ml-2">Unmark</button>
+                            <button type="submit" class="text-red-600 hover:underline ml-2" id="btn-{{ movie.id }}">Unmark</button>
                         </form>
                         {% if viewing.rating %} - Your Rating: {{ viewing.rating }}{% endif %}
                         {% if viewing.watched_on %} - You Watched on: {{ viewing.watched_on }}{% endif %}
                         {% if viewing.comment %} - Your Comment: {{ viewing.comment }}{% endif %}
                     {% else %}
-                        <span class="font-semibold text-gray-500">Unseen</span>
-                        <form action="{% url 'toggle_seen' movie.id %}" method="post" class="inline">
+                        <span class="font-semibold text-gray-500" id="status-{{ movie.id }}">Unseen</span>
+                        <form class="seen-toggle-form inline" data-movie-id="{{ movie.id }}" method="post" action="{% url 'toggle_seen' movie.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="text-green-600 hover:underline ml-2">Mark as seen</button>
+                            <button type="submit" class="text-green-600 hover:underline ml-2" id="btn-{{ movie.id }}">Mark as seen</button>
                         </form>
                     {% endif %}
                 </p>
+                {% endif %}
 
                 {# Other users' viewings #}
                 {% with others=viewing_map|get:movie.id %}
@@ -49,7 +55,7 @@
                             <ul class="mt-1 space-y-1">
                                 {% for v in others %}
                                     <li>
-                                        <span class="font-semibold">{{ v.person.name }}:</span>
+                                        <span class="font-semibold">{{ v.user.get_full_name|default:v.user.username }}:</span>
                                         {% if v.watched_on %}Watched on {{ v.watched_on }}{% endif %}
                                         {% if v.rating %}; Rating: {{ v.rating }}{% endif %}
                                         {% if v.comment %}; Comment: {{ v.comment }}{% endif %}
@@ -65,4 +71,49 @@
         {% endwith %}
     {% endfor %}
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const forms = document.querySelectorAll(".seen-toggle-form");
+    forms.forEach(form => {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const movieId = form.dataset.movieId;
+            const btn = document.getElementById(`btn-${movieId}`);
+            const status = document.getElementById(`status-${movieId}`);
+            const icon = document.getElementById(`icon-${movieId}`);
+            const csrfToken = form.querySelector("[name=csrfmiddlewaretoken]").value;
+
+            try {
+                const response = await fetch(form.action || `/movies/toggle/${movieId}/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": csrfToken,
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                });
+                const data = await response.json();
+
+                if (data.status === "seen") {
+                    status.textContent = "I've seen it!";
+                    status.className = "font-semibold text-green-700";
+                    btn.textContent = "Unmark";
+                    btn.className = "text-red-600 hover:underline ml-2";
+                    icon.textContent = "✅";
+                } else {
+                    status.textContent = "Unseen";
+                    status.className = "font-semibold text-gray-500";
+                    btn.textContent = "Mark as seen";
+                    btn.className = "text-green-600 hover:underline ml-2";
+                    icon.textContent = "❌";
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Could not update status. Please try again.");
+            }
+        });
+    });
+});
+</script>
+
 {% endblock %}

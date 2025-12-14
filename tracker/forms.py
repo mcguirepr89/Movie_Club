@@ -37,6 +37,11 @@ class TailwindFormMixin:
 
 
 class MovieForm(TailwindFormMixin, forms.ModelForm):
+    """
+    Movie creation/editing form.
+    `recommended_by` must be assigned in the view using request.user.
+    """
+
     class Meta:
         model = Movie
         fields = [
@@ -58,6 +63,11 @@ class MovieForm(TailwindFormMixin, forms.ModelForm):
 
 
 class ViewingForm(TailwindFormMixin, forms.ModelForm):
+    """
+    Viewing form.
+    The `user` and `movie` must be assigned in the view.
+    """
+
     class Meta:
         model = Viewing
         fields = ["watched_on", "rating", "comment"]

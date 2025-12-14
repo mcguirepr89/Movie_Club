@@ -1,5 +1,4 @@
 {% extends "tracker/base.html" %}
-{% load dict_extras %}
 
 {% block title %}{{ movie.title }}{% endblock %}
 
@@ -23,9 +22,10 @@
         <p><strong>Starring:</strong> {{ movie.starring }}</p>
         <p><strong>Director:</strong> {{ movie.director }}</p>
         <p><strong>Writer:</strong> {{ movie.writer }}</p>
-        <p><strong>Recommended by:</strong> {% if movie.recommended_by %}{{ movie.recommended_by.name }}{% endif %}</p>
+        <p><strong>Recommended by:</strong> {% if movie.recommended_by %}{{ movie.recommended_by.username }}{% endif %}</p>
     </div>
 
+    {% if user.is_authenticated %}
     <div class="flex space-x-4 mb-6">
         <a href="{% url 'movie_edit' movie.id %}">
             <button class="bg-blue-600 text-white py-1 px-4 rounded hover:bg-blue-700">Edit Movie Metadata</button>
@@ -43,13 +43,18 @@
             {% if current_user_viewing %}Update{% else %}Add{% endif %}
         </button>
     </form>
+    {% endif %}
 
-    <h3 class="text-xl font-semibold mb-2">Other Users' Viewings</h3>
     {% if other_viewings %}
+    {% if user.is_authenticated %}
+    <h3 class="text-xl font-semibold mb-2">Other Users' Viewings</h3>
+    {% else %}
+    <h3 class="text-xl font-semibold mb-2">Viewings</h3>
+    {% endif %}
         <ul class="space-y-2">
             {% for v in other_viewings %}
                 <li class="border-b border-gray-200 pb-2">
-                    <strong>{{ v.person.name }}:</strong>
+                    <strong>{{ v.user.username }}:</strong>
                     {% if v.watched_on %}Watched on {{ v.watched_on }}{% else %}Not marked{% endif %};
                     {% if v.rating %}Rating: {{ v.rating }}{% endif %};
                     {% if v.comment %}Comment: {{ v.comment }}{% endif %}

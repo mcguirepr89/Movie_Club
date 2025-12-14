@@ -1,0 +1,36 @@
+{% extends "tracker/base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-16 bg-white p-8 rounded-lg shadow">
+    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+
+    {% if form.errors %}
+        <div class="mb-4 text-red-600">
+            <p>Invalid username or password. Please try again.</p>
+        </div>
+    {% endif %}
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        
+        <div>
+            <label for="{{ form.username.id_for_label }}" class="block font-medium text-gray-700">Username</label>
+            {{ form.username }}
+        </div>
+
+        <div>
+            <label for="{{ form.password.id_for_label }}" class="block font-medium text-gray-700">Password</label>
+            {{ form.password }}
+        </div>
+
+        <div>
+            <button type="submit"
+                class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-red-500">
+                Log in
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

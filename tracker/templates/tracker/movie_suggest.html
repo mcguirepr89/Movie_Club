@@ -24,6 +24,7 @@
     <form method="post" class="space-y-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
         {% csrf_token %}
 
+    {% if user.is_authenticated %}                                                                                                                    
         <div class="space-y-2">
             <label for="seen_filter" class="font-semibold">Filter by Seen/Unseen:</label>
             <select name="seen_filter" id="seen_filter" class="border rounded p-1 w-full">
@@ -32,6 +33,7 @@
                 <option value="unseen" {% if seen_filter == "unseen" %}selected{% endif %}>Unseen</option>
             </select>
         </div>
+    {% endif %}
 
         <div class="space-y-2">
             <label class="font-semibold">Filter by Categories:</label>
