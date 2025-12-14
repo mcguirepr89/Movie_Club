@@ -6,16 +6,73 @@
 {% block content %}
 <h2 class="text-2xl font-bold mb-6 text-center">Movie List</h2>
 
+<!-- --- Sorting & Filters --- -->
+<form method="get" class="flex flex-wrap gap-3 items-center justify-center mb-6">
+    <!-- Sort -->
+    <label class="font-semibold">Sort by:</label>
+    <select name="sort" class="border rounded px-2 py-1">
+        <option value="title" {% if sort_by == "title" %}selected{% endif %}>Title</option>
+        <option value="year" {% if sort_by == "year" %}selected{% endif %}>Year</option>
+    </select>
+    <select name="dir" class="border rounded px-2 py-1">
+        <option value="asc" {% if sort_dir == "asc" %}selected{% endif %}>Ascending</option>
+        <option value="desc" {% if sort_dir == "desc" %}selected{% endif %}>Descending</option>
+    </select>
+
+    <!-- Seen/Unseen -->
+    {% if request.user.is_authenticated %}
+    <label class="font-semibold">Seen:</label>
+    <select name="seen" class="border rounded px-2 py-1">
+        <option value="" {% if selected_seen == "" %}selected{% endif %}>All</option>
+        <option value="1" {% if selected_seen == "1" %}selected{% endif %}>Seen</option>
+        <option value="0" {% if selected_seen == "0" %}selected{% endif %}>Unseen</option>
+    </select>
+    {% endif %}
+
+    <!-- Category -->
+    <label class="font-semibold">Category:</label>
+    <select name="category" class="border rounded px-2 py-1">
+        <option value="" {% if selected_category == "" %}selected{% endif %}>All</option>
+        {% for c in categories %}
+            <option value="{{ c.id }}" {% if selected_category == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Recommended By -->
+    <label class="font-semibold">Recommended by:</label>
+    <select name="recommended_by" class="border rounded px-2 py-1">
+        <option value="" {% if selected_recommender == "" %}selected{% endif %}>All</option>
+        {% for u in recommenders %}
+            <option value="{{ u.id }}" {% if selected_recommender == u.id|stringformat:"s" %}selected{% endif %}>{{ u.first_name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Streaming Service -->
+    <label class="font-semibold">Streaming:</label>
+    <select name="streaming" class="border rounded px-2 py-1">
+        <option value="" {% if selected_streaming == "" %}selected{% endif %}>All</option>
+        {% for s in streaming_services %}
+            <option value="{{ s.id }}" {% if selected_streaming == s.id|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Apply</button>
+</form>
+
+<!-- --- Movie Grid --- -->
 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
     {% for movie in movies %}
         {% with viewing=current_user_viewings|get:movie.id %}
         <div class="bg-white rounded-lg shadow p-5 flex flex-col justify-between">
             <div>
-            {% if movie.poster %}
+                {% if movie.poster %}
                 <div class="mb-3 flex justify-center">
-                    <a href="{% url 'movie_detail' movie.id %}"><img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster" class="w-48 h-auto rounded shadow-sm object-cover"></a>
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster" class="w-48 h-auto rounded shadow-sm object-cover">
+                    </a>
                 </div>
-            {% endif %}
+                {% endif %}
+
                 <h3 class="text-xl font-semibold mb-2 flex items-center justify-between">
                     <a href="{% url 'movie_detail' movie.id %}" class="hover:underline">{{ movie.title }}</a>
                     {% if request.user.is_authenticated %}
@@ -25,22 +82,22 @@
                     {% endif %}
                 </h3>
 
-		{% if movie.year %}
+                {% if movie.year %}
                 <p class="text-sm text-gray-600 mb-1"><strong>Year:</strong> {{ movie.year }}</p>
-		{% endif %}
-		{% if movie.recommended_by %}
-                <p class="text-sm text-gray-600 mb-1"><strong>Recommended by:</strong> {% if movie.recommended_by %}{{ movie.recommended_by.first_name }}{% endif %}</p>
-		{% endif %}
-		{% if movie.categories %}
+                {% endif %}
+                {% if movie.recommended_by %}
+                <p class="text-sm text-gray-600 mb-1"><strong>Recommended by:</strong> {{ movie.recommended_by.first_name }}</p>
+                {% endif %}
+                {% if movie.categories.all %}
                 <p class="text-sm text-gray-600 mb-1"><strong>Categories:</strong> 
                     {% for c in movie.categories.all %}{{ c.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
                 </p>
-		{% endif %}
-		{% if movie.streaming_services %}
+                {% endif %}
+                {% if movie.streaming_services.all %}
                 <p class="text-sm text-gray-600 mb-1"><strong>Streaming on:</strong> 
-                    {% for c in movie.streaming_services.all %}{{ c.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    {% for s in movie.streaming_services.all %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
                 </p>
-		{% endif %}
+                {% endif %}
 
                 {% if request.user.is_authenticated %}
                 <p class="mt-3" id="seen-section-{{ movie.id }}">
@@ -63,7 +120,6 @@
                 </p>
                 {% endif %}
 
-                {# Other users' viewings #}
                 {% with others=viewing_map|get:movie.id %}
                     {% if others %}
                         <div class="mt-4 pt-2 border-t border-gray-200 text-sm text-gray-700">
@@ -71,7 +127,7 @@
                             <ul class="mt-1 space-y-1">
                                 {% for v in others %}
                                     <li>
-                                        <span class="font-semibold">{{ v.user.get_full_name|default:v.user.username }}:</span>
+                                        <span class="font-semibold">{{ v.user.first_name|default:v.user.username }}:</span>
                                         {% if v.watched_on %}Watched on {{ v.watched_on }}{% endif %}
                                         {% if v.rating %}; Rating: {{ v.rating }}{% endif %}
                                         {% if v.comment %}; Comment: {{ v.comment }}{% endif %}
