@@ -10,8 +10,8 @@
       "director": "Nancy Meyers",
       "writer": "Nancy Meyers",
       "starring": "Cameron Diaz, Kate Winslet, Jude Law, Jack Black",
-      "categories": [2, 3],
-      "streaming_services": [2, 5, 16],
+      "categories": [2, 3, 12, 13],
+      "streaming_services": [2],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": 2
     }
@@ -27,8 +27,8 @@
       "director": "Clea DuVall",
       "writer": "Clea DuVall, Mary Holland",
       "starring": "Kristen Stewart, Mackenzie Davis, Alison Brie, Dan Levy",
-      "categories": [2, 3],
-      "streaming_services": [4, 16],
+      "categories": [2, 3, 11],
+      "streaming_services": [4],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": 2
     }
@@ -44,8 +44,8 @@
       "director": "Todd Haynes",
       "writer": "Phyllis Nagy",
       "starring": "Cate Blanchett, Rooney Mara",
-      "categories": [3, 8],
-      "streaming_services": [15, 16],
+      "categories": [3, 8, 11, 12],
+      "streaming_services": [1],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": 2
     }
@@ -61,8 +61,8 @@
       "director": "Chris Columbus",
       "writer": "John Hughes",
       "starring": "Macaulay Culkin, Joe Pesci, Daniel Stern, Catherine O'Hara",
-      "categories": [1, 4, 8],
-      "streaming_services": [3, 16],
+      "categories": [1, 4, 6, 8, 14],
+      "streaming_services": [3],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": 2
     }
@@ -78,8 +78,8 @@
       "director": "Chris Columbus",
       "writer": "John Hughes",
       "starring": "Macaulay Culkin, Joe Pesci, Daniel Stern, Catherine O'Hara",
-      "categories": [1, 4],
-      "streaming_services": [3, 16],
+      "categories": [1, 4, 6, 8, 14],
+      "streaming_services": [3],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": 2
     }
@@ -95,8 +95,8 @@
       "director": "Raja Gosnell",
       "writer": "John Hughes",
       "starring": "Alex D. Linz, Olek Krupa",
-      "categories": [1, 4],
-      "streaming_services": [3, 16],
+      "categories": [1, 4, 6, 8, 14],
+      "streaming_services": [4],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": 2
     }
@@ -112,8 +112,42 @@
       "director": "Chris Koch",
       "writer": "Will McRobb, Chris Viscardi",
       "starring": "Chevy Chase, Mark Webber, Schuyler Fisk",
-      "categories": [1, 4, 9],
-      "streaming_services": [7, 16],
+      "categories": [1, 4, 9, 14],
+      "streaming_services": [7],
+      "created_at": "2025-12-13T00:00:00Z",
+      "recommended_by": 2
+    }
+  },
+  {
+    "model": "tracker.movie",
+    "pk": 108,
+    "fields": {
+      "title": "Die Hard",
+      "year": 1988,
+      "description": "A New York City cop, John McClane, tries to save his estranged wife and several others taken hostage by terrorists during a Christmas Eve party at the Nakatomi Plaza Skyscraper in Los Angeles, California.",
+      "runtime_minutes": 132,
+      "director": "John McTiernan",
+      "writer": "Roderick Thorp, Jeb Stuart, Steven E. de Souza",
+      "starring": "Bruce Willis, Alan Rickman, Bonnie Bedelia",
+      "categories": [6, 8, 9],
+      "streaming_services": [3, 4, 2, 8],
+      "created_at": "2025-12-13T00:00:00Z",
+      "recommended_by": 2
+    }
+  },
+  {
+    "model": "tracker.movie",
+    "pk": 109,
+    "fields": {
+      "title": "Jingle Bell Heist",
+      "year": 2025,
+      "description": "At the height of the holiday season, two strangers team up to rob one of London's most famous department stores while accidentally falling in love.",
+      "runtime_minutes": 96,
+      "director": "Michael Fimognari",
+      "writer": "Abby McDonald, Amy Reed",
+      "starring": "Olivia Holt, Conner Swindell",
+      "categories": [1, 3, 9, 14],
+      "streaming_services": [1],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": 2
     }

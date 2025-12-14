@@ -25,11 +25,22 @@
                     {% endif %}
                 </h3>
 
+		{% if movie.year %}
                 <p class="text-sm text-gray-600 mb-1"><strong>Year:</strong> {{ movie.year }}</p>
+		{% endif %}
+		{% if movie.recommended_by %}
                 <p class="text-sm text-gray-600 mb-1"><strong>Recommended by:</strong> {% if movie.recommended_by %}{{ movie.recommended_by.first_name }}{% endif %}</p>
+		{% endif %}
+		{% if movie.categories %}
                 <p class="text-sm text-gray-600 mb-1"><strong>Categories:</strong> 
                     {% for c in movie.categories.all %}{{ c.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
                 </p>
+		{% endif %}
+		{% if movie.streaming_services %}
+                <p class="text-sm text-gray-600 mb-1"><strong>Streaming on:</strong> 
+                    {% for c in movie.streaming_services.all %}{{ c.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                </p>
+		{% endif %}
 
                 {% if request.user.is_authenticated %}
                 <p class="mt-3" id="seen-section-{{ movie.id }}">

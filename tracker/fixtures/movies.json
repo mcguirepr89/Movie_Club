@@ -10,8 +10,8 @@
       "director": "Jon Favreau",
       "writer": "David Berenbaum",
       "starring": "Will Ferrell, Zooey Deschanel, James Caan",
-      "categories": [1, 4, 9],
-      "streaming_services": [1, 5],
+      "categories": [1, 4, 9, 14],
+      "streaming_services": [4, 5],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": 1
     }
@@ -27,7 +27,7 @@
       "director": "Brian Henson",
       "writer": "Jerry Juhl",
       "starring": "Michael Caine, Kermit the Frog, Miss Piggy",
-      "categories": [3, 4, 8, 10],
+      "categories": [1, 3, 4, 8, 10],
       "streaming_services": [3],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": 1
@@ -44,7 +44,7 @@
       "director": "Henry Selick",
       "writer": "Caroline Thompson",
       "starring": "Danny Elfman, Chris Sarandon, Catherine O'Hara",
-      "categories": [5, 7, 10],
+      "categories": [4, 5, 7, 8, 10],
       "streaming_services": [3],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": 1
@@ -61,8 +61,42 @@
       "director": "Bob Clark",
       "writer": "Jean Shepherd",
       "starring": "Peter Billingsley, Darren McGavin",
-      "categories": [1, 4, 8],
-      "streaming_services": [5],
+      "categories": [1, 3, 4, 8],
+      "streaming_services": [3, 4, 5],
+      "created_at": "2025-12-13T00:00:00Z",
+      "recommended_by": 1
+    }
+  },
+  {
+    "model": "tracker.movie",
+    "pk": 5,
+    "fields": {
+      "title": "How the Grinch Stole Christmas",
+      "year": 2000,
+      "description": "On the outskirts of Whoville lives a green, revenge-seeking Grinch who plans to ruin Christmas for all of the citizens of the town.",
+      "runtime_minutes": 104,
+      "director": "Ron Howard",
+      "writer": "Jeffery Price, Peter S. Seaman",
+      "starring": "Jim Carrey",
+      "categories": [1, 3, 4, 7, 14],
+      "streaming_services": [2, 8],
+      "created_at": "2025-12-13T00:00:00Z",
+      "recommended_by": 1
+    }
+  },
+  {
+    "model": "tracker.movie",
+    "pk": 6,
+    "fields": {
+      "title": "The Family Man",
+      "year": 2000,
+      "description": "Offered the opportunity to see how the other half lives, a fast-lane investment broker, wakes up to find that his sports car and girlfriend have become a mini-van and a wife.",
+      "runtime_minutes": 145,
+      "director": "Brett Ratner",
+      "writer": "David Diamond, David Weissman",
+      "starring": "Nicolas Cage, Téa Leoni, Don Cheadle, Jeremy Piven",
+      "categories": [2, 3],
+      "streaming_services": [2],
       "created_at": "2025-12-13T00:00:00Z",
       "recommended_by": 1
     }
