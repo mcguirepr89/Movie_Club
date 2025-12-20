@@ -17,11 +17,6 @@ class Category(models.Model):
 
 
 class StreamingService(models.Model):
-    """
-    Represents a streaming platform a movie may be available on.
-    Examples: Netflix, Disney+, Prime Video, Physical Media, etc.
-    """
-
     name = models.CharField(max_length=100, unique=True)
 
     class Meta:
