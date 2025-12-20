@@ -2,7 +2,10 @@ import datetime
 from django import forms
 from .models import Movie, Viewing
 
-YEAR_CHOICES = [(year, year) for year in range(1898, datetime.date.today().year + 1)]
+YEAR_CHOICES = (
+    [('', 'Not sure')] +
+    [(year, year) for year in range(1898, datetime.date.today().year + 1)]
+)
 
 class TailwindFormMixin:
     BASE_INPUT_CLASSES = (
@@ -43,7 +46,12 @@ class MovieForm(TailwindFormMixin, forms.ModelForm):
     Movie creation/editing form.
     `recommended_by` must be assigned in the view using request.user.
     """
-    year = forms.ChoiceField(choices=YEAR_CHOICES)
+    year = forms.TypedChoiceField(
+        choices=YEAR_CHOICES,
+        required=False,
+	coerce=int,
+	empty_value=None,
+    )
 
     class Meta:
         model = Movie
