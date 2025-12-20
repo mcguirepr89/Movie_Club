@@ -11,7 +11,8 @@
    python manage.py loaddata people
    python manage.py loaddata categories 
    python manage.py loaddata streaming_services
-   python manage.py loaddata movies
+   python manage.py loaddata patrick_movies
+   python manage.py loaddata alyssa_movies
    ```
 1. Run the development server: `python manage.py runserver`
 
