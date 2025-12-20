@@ -21,12 +21,12 @@
     <div class="bg-white rounded-lg shadow p-5 mb-6 space-y-2">
         <p><strong>Year:</strong> {{ movie.year }}</p>
         <p><strong>Description:</strong> {{ movie.description|default:"No description" }}</p>
+        <p><strong>Starring:</strong> {{ movie.starring }}</p>
         <p><strong>Runtime:</strong> {% if movie.runtime_minutes %}{{ movie.runtime_minutes }} min{% else %}N/A{% endif %}</p>
         <p><strong>Categories:</strong> {% for c in movie.categories.all %}{{ c.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-        <p><strong>Streaming Services:</strong> {% for s in movie.streaming_services.all %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-        <p><strong>Starring:</strong> {{ movie.starring }}</p>
         <p><strong>Director:</strong> {{ movie.director }}</p>
         <p><strong>Writer:</strong> {{ movie.writer }}</p>
+        <p><strong>Streaming Services:</strong> {% for s in movie.streaming_services.all %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
         <p><strong>Recommended by:</strong> {% if movie.recommended_by %}{{ movie.recommended_by.first_name }}{% endif %}</p>
     </div>
 

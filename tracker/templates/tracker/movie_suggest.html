@@ -7,16 +7,22 @@
     {% if suggested_movie %}
         <div class="mt-6 bg-white mb-4 rounded-lg shadow p-5 border border-gray-200">
             <h3 class="text-xl font-bold mb-2">Suggested Movie:</h3>
+            {% if suggested_movie.poster %}                                                                                                                       <div class="mb-3 flex justify-center">                                                                                                
+                <a href="{% url 'movie_detail' suggested_movie.id %}">
+                    <img src="{{ suggested_movie.poster.url }}" alt="{{ suggested_movie.title }} poster" class="w-48 h-auto rounded shadow-sm object-cover">
+                </a>                                                                                                                              
+            </div>                                                                                                                                
+            {% endif %}  
             <p><strong>Title:</strong> {{ suggested_movie.title }}</p>
+            <p><strong>Recommended by:</strong> {% if suggested_movie.recommended_by %}{{ suggested_movie.recommended_by.first_name }}{% endif %}</p>
             <p><strong>Year:</strong> {{ suggested_movie.year }}</p>
-            <p><strong>Recommended by:</strong> {% if suggested_movie.recommended_by %}{{ suggested_movie.recommended_by.name }}{% endif %}</p>
+            <p><strong>Description:</strong> {{ suggested_movie.description|default:"No description" }}</p>
+            <p><strong>Starring:</strong> {{ suggested_movie.starring }}</p>
             <p><strong>Categories:</strong> {% for c in suggested_movie.categories.all %}{{ c.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             <p><strong>Runtime:</strong> {% if suggested_movie.runtime_minutes %}{{ suggested_movie.runtime_minutes }} min{% else %}N/A{% endif %}</p>
             <p><strong>Streaming Services:</strong> {% for s in suggested_movie.streaming_services.all %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             <p><strong>Director:</strong> {{ suggested_movie.director }}</p>
             <p><strong>Writer:</strong> {{ suggested_movie.writer }}</p>
-            <p><strong>Starring:</strong> {{ suggested_movie.starring }}</p>
-            <p><strong>Description:</strong> {{ suggested_movie.description|default:"No description" }}</p>
         </div>
     {% endif %}
     <h2 class="text-2xl font-bold mb-4">Suggest a Movie</h2>
