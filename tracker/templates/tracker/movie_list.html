@@ -123,11 +123,11 @@
                 {% with others=viewing_map|get:movie.id %}
                     {% if others %}
                         <div class="mt-4 pt-2 border-t border-gray-200 text-sm text-gray-700">
-                            <strong>Who's seen it:</strong>
+                            <strong>Who's seen it?</strong>
                             <ul class="mt-1 space-y-1">
                                 {% for v in others %}
                                     <li>
-                                        <span class="font-semibold">{{ v.user.first_name|default:v.user.username }}:</span>
+                                        <span class="font-semibold">{{ v.user.first_name|default:v.user.username }}</span>
                                         {% if v.watched_on %}Watched on {{ v.watched_on }}{% endif %}
                                         {% if v.rating %}; Rating: {{ v.rating }}{% endif %}
                                         {% if v.comment %}; Comment: {{ v.comment }}{% endif %}
