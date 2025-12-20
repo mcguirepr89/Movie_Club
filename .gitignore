@@ -5,3 +5,4 @@ venv/
 db.sqlite3
 */settings.py
 tracker/fixtures/users.json
+media/*
