@@ -17,6 +17,7 @@ SORT_OPTIONS = {
 }
 
 def movie_list(request):
+    # Base queryset
     movies = Movie.objects.prefetch_related(
         "categories",
         "streaming_services",
@@ -28,83 +29,94 @@ def movie_list(request):
     movies = movies.order_by(ordering)
 
     # --- Filters ---
+    # Seen/Unseen
     if request.user.is_authenticated:
-        # Seen/Unseen filter
         seen_filter = request.GET.get("seen")
         if seen_filter == "1":
             movies = movies.filter(viewing__user=request.user)
         elif seen_filter == "0":
             movies = movies.exclude(viewing__user=request.user)
 
+    # Categories (multi-choice)
     category_ids = request.GET.getlist("categories")
     if category_ids:
         movies = movies.filter(categories__id__in=category_ids).distinct()
-    
-    # Director / Writer / Starring
-    if request.GET.get("director"):
-        movies = movies.filter(director=request.GET["director"])
-    
-    if request.GET.get("writer"):
-        movies = movies.filter(writer=request.GET["writer"])
-    
-    if request.GET.get("starring"):
-        movies = movies.filter(starring__icontains=request.GET["starring"])
 
-    recommender_id = request.GET.get("recommended_by")
+    # Director / Writer / Starring filters
+    director_filter = request.GET.get("director", "")
+    if director_filter:
+        movies = movies.filter(director=director_filter)
+
+    writer_filter = request.GET.get("writer", "")
+    if writer_filter:
+        movies = movies.filter(writer=writer_filter)
+
+    starring_filter = request.GET.get("starring", "")
+    if starring_filter:
+        movies = movies.filter(starring__icontains=starring_filter)
+
+    # Recommender / Streaming filters
+    recommender_id = request.GET.get("recommended_by", "")
     if recommender_id:
         movies = movies.filter(recommended_by__id=recommender_id)
 
-    streaming_id = request.GET.get("streaming")
+    streaming_id = request.GET.get("streaming", "")
     if streaming_id:
         movies = movies.filter(streaming_services__id=streaming_id)
 
-    # --- Viewings ---
+    # --- Viewings mapping ---
     current_user_viewings = {}
     viewing_map = {}
+    viewings = Viewing.objects.select_related("user", "movie")
 
     if request.user.is_authenticated:
-        viewings = Viewing.objects.select_related("user", "movie")
         for v in viewings:
             if v.user_id == request.user.id:
                 current_user_viewings[v.movie_id] = v
             else:
                 viewing_map.setdefault(v.movie_id, []).append(v)
     else:
-        for v in Viewing.objects.select_related("user", "movie"):
+        for v in viewings:
             viewing_map.setdefault(v.movie_id, []).append(v)
 
-    # --- Filter data for drop-downs ---
+    # --- Filter data for dropdowns ---
     categories = Category.objects.all()
     streaming_services = StreamingService.objects.all()
     recommenders = User.objects.filter(recommended_movies__isnull=False).distinct()
+    writers = Movie.objects.exclude(writer="").values_list("writer", flat=True).distinct()
+    directors = Movie.objects.exclude(director="").values_list("director", flat=True).distinct()
+    starring_list = sorted({
+        a.strip()
+        for s in Movie.objects.exclude(starring="").values_list("starring", flat=True)
+        for a in s.split(",")
+    })
 
-    return render(
-        request,
-        "tracker/movie_list.html",
-        {
-            "movies": movies,
-            "current_user_viewings": current_user_viewings,
-            "viewing_map": viewing_map,
-            "categories": categories,
-            "streaming_services": streaming_services,
-            "recommenders": recommenders,
-            "sort": sort_key,
-            "selected_seen": request.GET.get("seen", ""),
-            "selected_recommender": request.GET.get("recommended_by", ""),
-            "selected_streaming": request.GET.get("streaming", ""),
-            "selected_categories": category_ids,
-            "selected_director": request.GET.get("director", ""),
-            "selected_writer": request.GET.get("writer", ""),
-            "selected_starring": request.GET.get("starring", ""),
-            "writers": Movie.objects.exclude(writer="").values_list("writer", flat=True).distinct(),
-            "directors": Movie.objects.exclude(director="").values_list("director", flat=True).distinct(),
-            "starring_list": sorted({
-                a.strip()
-                for s in Movie.objects.exclude(starring="").values_list("starring", flat=True)
-                for a in s.split(",")
-            }),
-        },
-    )
+    context = {
+        "movies": movies,
+        "current_user_viewings": current_user_viewings,
+        "viewing_map": viewing_map,
+        "categories": categories,
+        "streaming_services": streaming_services,
+        "recommenders": recommenders,
+        "sort": sort_key,
+        "selected_seen": seen_filter or "",
+        "selected_categories": category_ids,
+        "selected_director": director_filter,
+        "selected_writer": writer_filter,
+        "selected_starring": starring_filter,
+        "selected_recommender": recommender_id,
+        "selected_streaming": streaming_id,
+        "writers": writers,
+        "directors": directors,
+        "starring_list": starring_list,
+    }
+
+    # --- AJAX response for live filtering ---
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        return render(request, "tracker/_movie_grid.html", context)
+
+    # --- Full page render ---
+    return render(request, "tracker/movie_list.html", context)
 
 def movie_detail(request, movie_id):
     movie = get_object_or_404(

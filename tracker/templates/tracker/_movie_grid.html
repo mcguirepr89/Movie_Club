@@ -1,0 +1,6 @@
+{% load dict_extras %}
+{% for movie in movies %}
+    {% include "tracker/_movie_card.html" with movie=movie viewing=current_user_viewings|get:movie.id viewing_map=viewing_map %}
+{% empty %}
+    <p class="col-span-full text-center text-gray-500">No movies match the selected filters.</p>
+{% endfor %}

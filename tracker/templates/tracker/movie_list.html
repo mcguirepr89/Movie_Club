@@ -8,126 +8,163 @@
 
 <div class="flex flex-col lg:flex-row gap-6">
 
-    <!-- Filters -->
-    <aside class="lg:w-64">
-        <details class="lg:hidden mb-4">
-            <summary class="cursor-pointer font-semibold bg-gray-100 p-2 rounded">
-                Filters & Sorting
-            </summary>
-            {% include "tracker/_movie_filters.html" %}
-        </details>
+<aside class="lg:w-64">
 
-        <div class="hidden lg:block">
-            {% include "tracker/_movie_filters.html" %}
-        </div>
-    </aside>
+    <!-- Mobile collapsible filters -->
+    <details class="lg:hidden mb-4">
+        <summary class="cursor-pointer font-semibold bg-gray-100 p-2 rounded">
+            Filters & Sorting
+        </summary>
+        {% include "tracker/_movie_filters.html" with form_class="movie-filters" %}
+    </details>
+
+    <!-- Desktop filters -->
+    <div class="hidden lg:block">
+        {% include "tracker/_movie_filters.html" with form_class="movie-filters" %}
+    </div>
+
+</aside>
+
+<div class="flex-1">
+    <!-- Filter Chips -->
+    <div id="filter-chips" class="flex flex-wrap gap-2 mb-4"></div>
 
     <!-- Movie Grid -->
-    <section class="flex-1">
-        <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {% if movies %}
-        {% for movie in movies %}
-            {% with viewing=current_user_viewings|get:movie.id %}
-            <div class="bg-white rounded-lg shadow p-5 flex flex-col justify-between">
-                <div>
-                    {% if movie.poster %}
-                    <div class="mb-3 flex justify-center">
-                        <a href="{% url 'movie_detail' movie.id %}">
-                            <img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster" class="w-48 h-auto rounded shadow-sm object-cover">
-                        </a>
-                    </div>
-                    {% endif %}
-
-                    <h3 class="text-xl font-semibold mb-2 flex items-center justify-between">
-                        <a href="{% url 'movie_detail' movie.id %}" class="hover:underline">{{ movie.title }}</a>
-                        {% if request.user.is_authenticated %}
-                            <span id="icon-{{ movie.id }}" class="ml-2 font-bold">
-                                {% if viewing %}✅{% else %}❌{% endif %}
-                            </span>
-                        {% endif %}
-                    </h3>
-
-                    {% if movie.year %}
-                    <p class="text-sm text-gray-600 mb-1"><strong>Year:</strong> {{ movie.year }}</p>
-                    {% endif %}
-                    {% if movie.recommended_by %}
-                    <p class="text-sm text-gray-600 mb-1"><strong>Recommended by:</strong> {{ movie.recommended_by.first_name }}</p>
-                    {% endif %}
-                    {% if movie.categories.all %}
-                    <p class="text-sm text-gray-600 mb-1"><strong>Categories:</strong> 
-                        {% for c in movie.categories.all %}{{ c.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
-                    </p>
-                    {% endif %}
-                    {% if movie.streaming_services.all %}
-                    <p class="text-sm text-gray-600 mb-1"><strong>Streaming on:</strong> 
-                        {% for s in movie.streaming_services.all %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
-                    </p>
-                    {% endif %}
-
-                    {% if request.user.is_authenticated %}
-                    <p class="mt-3" id="seen-section-{{ movie.id }}">
-                        {% if viewing %}
-                            <span class="font-semibold text-green-700" id="status-{{ movie.id }}">I've seen it!</span>
-                            <form class="seen-toggle-form inline" data-movie-id="{{ movie.id }}" method="post" action="{% url 'toggle_seen' movie.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="text-red-600 hover:underline ml-2" id="btn-{{ movie.id }}">Unmark</button>
-                            </form>
-                            {% if viewing.rating %} - Your Rating: {{ viewing.rating }}{% endif %}
-                            {% if viewing.watched_on %} - You Watched on: {{ viewing.watched_on }}{% endif %}
-                            {% if viewing.comment %} - Your Comment: {{ viewing.comment }}{% endif %}
-                        {% else %}
-                            <span class="font-semibold text-gray-500" id="status-{{ movie.id }}">Unseen</span>
-                            <form class="seen-toggle-form inline" data-movie-id="{{ movie.id }}" method="post" action="{% url 'toggle_seen' movie.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="text-green-600 hover:underline ml-2" id="btn-{{ movie.id }}">Mark as seen</button>
-                            </form>
-                        {% endif %}
-                    </p>
-                    {% endif %}
-
-                    {% with others=viewing_map|get:movie.id %}
-                        {% if others %}
-                            <div class="mt-4 pt-2 border-t border-gray-200 text-sm text-gray-700">
-                                <strong>Who's seen it?</strong>
-                                <ul class="mt-1 space-y-1">
-                                    {% for v in others %}
-                                        <li>
-                                            <span class="font-semibold">{{ v.user.first_name|default:v.user.username }}</span>
-                                            {% if v.watched_on %}Watched on {{ v.watched_on }}{% endif %}
-                                            {% if v.rating %}; Rating: {{ v.rating }}{% endif %}
-                                            {% if v.comment %}; Comment: {{ v.comment }}{% endif %}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                </div>
-            </div>
-            {% endwith %}
-        {% endfor %}
-        {% else %}
-        Sorry, but no movies match those filters.
-        {% endif %}
-        </div>
-    </section>
+    <div id="movie-grid" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {% include "tracker/_movie_grid.html" %}
+    </div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const forms = document.querySelectorAll(".seen-toggle-form");
-    forms.forEach(form => {
-        form.addEventListener("submit", async (e) => {
+    const movieGrid = document.getElementById("movie-grid");
+    const filterChips = document.getElementById("filter-chips");
+
+    async function updateMovies(url) {
+        try {
+            const response = await fetch(url, {
+                headers: {"X-Requested-With": "XMLHttpRequest"}
+            });
+            const data = await response.text();
+            movieGrid.innerHTML = data;
+            updateChips();
+            initSeenToggle();
+        } catch (err) {
+            console.error(err);
+            alert("Failed to update movies.");
+        }
+    }
+
+    function getVisibleForm() {
+        // Return the first visible filters form
+        return Array.from(document.querySelectorAll(".movie-filters"))
+            .find(f => f.offsetParent !== null);
+    }
+
+    function updateChips() {
+        filterChips.innerHTML = "";
+        const filtersForm = getVisibleForm();
+        const formData = new FormData(filtersForm);
+    
+        // Collect multi-value keys (checkboxes)
+        const entries = {};
+        for (const [key, value] of formData.entries()) {
+            if (!entries[key]) entries[key] = [];
+            entries[key].push(value);
+        }
+    
+        // Mapping keys & values to readable labels
+        const keyLabels = {
+            sort: "Sort",
+            seen: "Seen",
+            categories: "Category",
+            director: "Director",
+            writer: "Writer",
+            starring: "Starring",
+            streaming: "Streaming",
+            recommended_by: "Recommended by"
+        };
+    
+        const sortLabels = {
+            title_asc: "Title (A–Z)",
+            title_desc: "Title (Z–A)",
+            year_asc: "Year (Oldest)",
+            year_desc: "Year (Newest)",
+            recent: "Recently added"
+        };
+    
+        const seenLabels = {
+            "1": "Seen",
+            "0": "Unseen",
+            "": "All"
+        };
+    
+        for (const key in entries) {
+            const values = entries[key].filter(v => v); // skip empty
+            if (values.length === 0) continue;
+    
+            let labelKey = keyLabels[key] || key;
+            let displayValues = [];
+    
+            if (key === "sort") {
+                displayValues = values.map(v => sortLabels[v] || v);
+            } else if (key === "seen") {
+                displayValues = values.map(v => seenLabels[v] || v);
+            } else if (key === "categories") {
+                displayValues = values.map(v => {
+                    const inputEl = filtersForm.querySelector(`input[name="categories"][value="${v}"]`);
+                    return inputEl ? inputEl.nextElementSibling.textContent.trim() : v;
+                });
+            } else if (key === "streaming") {
+                displayValues = values.map(v => {
+                    const selectEl = filtersForm.querySelector(`select[name="streaming"] option[value="${v}"]`);
+                    return selectEl ? selectEl.textContent : v;
+                });
+            } else if (key === "recommended_by") {
+                displayValues = values.map(v => {
+                    const selectEl = filtersForm.querySelector(`select[name="recommended_by"] option[value="${v}"]`);
+                    return selectEl ? selectEl.textContent : v;
+                });
+            } else {
+                displayValues = values;
+            }
+    
+            const chip = document.createElement("div");
+            chip.className = "bg-blue-100 text-blue-800 px-2 py-1 rounded flex items-center gap-1";
+            chip.innerHTML = `<span>${labelKey}: ${displayValues.join(", ")}</span> <button type="button" data-key="${key}">&times;</button>`;
+            filterChips.appendChild(chip);
+    
+            // Remove filter when chip clicked
+            chip.querySelector("button").addEventListener("click", () => {
+                if (key === "categories") {
+                    filtersForm.querySelectorAll(`input[name="categories"]`).forEach(input => input.checked = false);
+                } else {
+                    filtersForm.querySelector(`[name="${key}"]`).value = "";
+                }
+                const url = filtersForm.action + "?" + new URLSearchParams(new FormData(filtersForm)).toString();
+                updateMovies(url);
+                history.replaceState(null, "", url);
+            });
+        }
+    }
+
+    function initSeenToggle() {
+        const forms = document.querySelectorAll(".seen-toggle-form");
+        forms.forEach(form => {
+            form.removeEventListener("submit", submitHandler); // prevent duplicates
+            form.addEventListener("submit", submitHandler);
+        });
+
+        async function submitHandler(e) {
             e.preventDefault();
-            const movieId = form.dataset.movieId;
+            const movieId = this.dataset.movieId;
             const btn = document.getElementById(`btn-${movieId}`);
             const status = document.getElementById(`status-${movieId}`);
             const icon = document.getElementById(`icon-${movieId}`);
-            const csrfToken = form.querySelector("[name=csrfmiddlewaretoken]").value;
+            const csrfToken = this.querySelector("[name=csrfmiddlewaretoken]").value;
 
             try {
-                const response = await fetch(form.action || `/movies/toggle/${movieId}/`, {
+                const response = await fetch(this.action, {
                     method: "POST",
                     headers: {
                         "X-CSRFToken": csrfToken,
@@ -153,9 +190,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error(err);
                 alert("Could not update status. Please try again.");
             }
+        }
+    }
+
+    // --- Attach change listeners to all filter forms ---
+    document.querySelectorAll(".movie-filters").forEach(filtersForm => {
+        filtersForm.querySelectorAll("input, select").forEach(el => {
+            el.addEventListener("change", () => {
+                const url = getVisibleForm().action + "?" + new URLSearchParams(new FormData(getVisibleForm())).toString();
+                updateMovies(url);
+                history.replaceState(null, "", url);
+            });
         });
     });
+
+    updateChips();
+    initSeenToggle();
 });
 </script>
-
 {% endblock %}

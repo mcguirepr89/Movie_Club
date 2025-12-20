@@ -1,0 +1,78 @@
+{% load dict_extras %}
+
+<div class="bg-white rounded-lg shadow p-5 flex flex-col justify-between">
+    <div>
+        {% if movie.poster %}
+        <div class="mb-3 flex justify-center">
+            <a href="{% url 'movie_detail' movie.id %}">
+                <img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster" class="w-48 h-auto rounded shadow-sm object-cover">
+            </a>
+        </div>
+        {% endif %}
+
+        <h3 class="text-xl font-semibold mb-2 flex items-center justify-between">
+            <a href="{% url 'movie_detail' movie.id %}" class="hover:underline">{{ movie.title }}</a>
+            {% if request.user.is_authenticated %}
+                <span id="icon-{{ movie.id }}" class="ml-2 font-bold">
+                    {% if viewing %}✅{% else %}❌{% endif %}
+                </span>
+            {% endif %}
+        </h3>
+
+        {% if movie.year %}
+        <p class="text-sm text-gray-600 mb-1"><strong>Year:</strong> {{ movie.year }}</p>
+        {% endif %}
+        {% if movie.recommended_by %}
+        <p class="text-sm text-gray-600 mb-1"><strong>Recommended by:</strong> {{ movie.recommended_by.first_name }}</p>
+        {% endif %}
+        {% if movie.categories.all %}
+        <p class="text-sm text-gray-600 mb-1"><strong>Categories:</strong> 
+            {% for c in movie.categories.all %}{{ c.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+        </p>
+        {% endif %}
+        {% if movie.streaming_services.all %}
+        <p class="text-sm text-gray-600 mb-1"><strong>Streaming on:</strong> 
+            {% for s in movie.streaming_services.all %}{{ s.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+        </p>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+        <p class="mt-3" id="seen-section-{{ movie.id }}">
+            {% if viewing %}
+                <span class="font-semibold text-green-700" id="status-{{ movie.id }}">I've seen it!</span>
+                <form class="seen-toggle-form inline" data-movie-id="{{ movie.id }}" method="post" action="{% url 'toggle_seen' movie.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="text-red-600 hover:underline ml-2" id="btn-{{ movie.id }}">Unmark</button>
+                </form>
+                {% if viewing.rating %} - Your Rating: {{ viewing.rating }}{% endif %}
+                {% if viewing.watched_on %} - Watched on: {{ viewing.watched_on }}{% endif %}
+                {% if viewing.comment %} - Comment: {{ viewing.comment }}{% endif %}
+            {% else %}
+                <span class="font-semibold text-gray-500" id="status-{{ movie.id }}">Unseen</span>
+                <form class="seen-toggle-form inline" data-movie-id="{{ movie.id }}" method="post" action="{% url 'toggle_seen' movie.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="text-green-600 hover:underline ml-2" id="btn-{{ movie.id }}">Mark as seen</button>
+                </form>
+            {% endif %}
+        </p>
+        {% endif %}
+
+        {% with others=viewing_map|get:movie.id %}
+            {% if others %}
+                <div class="mt-4 pt-2 border-t border-gray-200 text-sm text-gray-700">
+                    <strong>Who's seen it?</strong>
+                    <ul class="mt-1 space-y-1">
+                        {% for v in others %}
+                            <li>
+                                <span class="font-semibold">{{ v.user.first_name|default:v.user.username }}</span>
+                                {% if v.watched_on %}Watched on {{ v.watched_on }}{% endif %}
+                                {% if v.rating %}; Rating: {{ v.rating }}{% endif %}
+                                {% if v.comment %}; Comment: {{ v.comment }}{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
