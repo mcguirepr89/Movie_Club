@@ -8,6 +8,14 @@ from django.contrib.auth.models import User
 from .forms import MovieForm, ViewingForm
 from .models import Movie, Viewing, Category, StreamingService
 
+SORT_OPTIONS = {
+    "title_asc": "title",
+    "title_desc": "-title",
+    "year_asc": "year",
+    "year_desc": "-year",
+    "recent": "-created_at",
+}
+
 def movie_list(request):
     movies = Movie.objects.prefetch_related(
         "categories",
@@ -15,15 +23,9 @@ def movie_list(request):
     ).all()
 
     # --- Sorting ---
-    sort_by = request.GET.get("sort", "title")
-    sort_dir = request.GET.get("dir", "asc")
-    sort_fields = {"title": "title", "year": "year"}
-
-    if sort_by in sort_fields:
-        ordering = sort_fields[sort_by]
-        if sort_dir == "desc":
-            ordering = "-" + ordering
-        movies = movies.order_by(ordering)
+    sort_key = request.GET.get("sort", "title_asc")
+    ordering = SORT_OPTIONS.get(sort_key, "title")
+    movies = movies.order_by(ordering)
 
     # --- Filters ---
     if request.user.is_authenticated:
@@ -34,9 +36,19 @@ def movie_list(request):
         elif seen_filter == "0":
             movies = movies.exclude(viewing__user=request.user)
 
-    category_id = request.GET.get("category")
-    if category_id:
-        movies = movies.filter(categories__id=category_id)
+    category_ids = request.GET.getlist("categories")
+    if category_ids:
+        movies = movies.filter(categories__id__in=category_ids).distinct()
+    
+    # Director / Writer / Starring
+    if request.GET.get("director"):
+        movies = movies.filter(director=request.GET["director"])
+    
+    if request.GET.get("writer"):
+        movies = movies.filter(writer=request.GET["writer"])
+    
+    if request.GET.get("starring"):
+        movies = movies.filter(starring__icontains=request.GET["starring"])
 
     recommender_id = request.GET.get("recommended_by")
     if recommender_id:
@@ -76,12 +88,21 @@ def movie_list(request):
             "categories": categories,
             "streaming_services": streaming_services,
             "recommenders": recommenders,
-            "sort_by": sort_by,
-            "sort_dir": sort_dir,
+            "sort": sort_key,
             "selected_seen": request.GET.get("seen", ""),
-            "selected_category": request.GET.get("category", ""),
             "selected_recommender": request.GET.get("recommended_by", ""),
             "selected_streaming": request.GET.get("streaming", ""),
+            "selected_categories": category_ids,
+            "selected_director": request.GET.get("director", ""),
+            "selected_writer": request.GET.get("writer", ""),
+            "selected_starring": request.GET.get("starring", ""),
+            "writers": Movie.objects.exclude(writer="").values_list("writer", flat=True).distinct(),
+            "directors": Movie.objects.exclude(director="").values_list("director", flat=True).distinct(),
+            "starring_list": sorted({
+                a.strip()
+                for s in Movie.objects.exclude(starring="").values_list("starring", flat=True)
+                for a in s.split(",")
+            }),
         },
     )
 

@@ -1,0 +1,99 @@
+<form method="get" class="space-y-6 bg-white p-4 rounded-lg shadow">
+
+    <!-- Sort -->
+    <div>
+        <label class="font-semibold block mb-1">Sort</label>
+        <select name="sort" class="w-full border rounded p-2">
+            <option value="title_asc" {% if sort == "title_asc" %}selected{% endif %}>Title (A–Z)</option>
+            <option value="title_desc" {% if sort == "title_desc" %}selected{% endif %}>Title (Z–A)</option>
+            <option value="year_asc" {% if sort == "year_asc" %}selected{% endif %}>Year (Oldest)</option>
+            <option value="year_desc" {% if sort == "year_desc" %}selected{% endif %}>Year (Newest)</option>
+            <option value="recent" {% if sort == "recent" %}selected{% endif %}>Recently added</option>
+        </select>
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <!-- Seen -->
+    <div>
+        <label class="font-semibold block mb-1">Seen</label>
+        <select name="seen" class="w-full border rounded p-2">
+            <option value="">All</option>
+            <option value="1" {% if selected_seen == "1" %}selected{% endif %}>Seen</option>
+            <option value="0" {% if selected_seen == "0" %}selected{% endif %}>Unseen</option>
+        </select>
+    </div>
+    {% endif %}
+
+    <!-- Categories (multi-select) -->
+    <div>
+        <label class="font-semibold block mb-1">Categories</label>
+        <div class="space-y-1">
+            {% for c in categories %}
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" name="categories" value="{{ c.id }}"
+                           {% if c.id|stringformat:"s" in selected_categories %}checked{% endif %}>
+                    {{ c.name }}
+                </label>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Director -->
+    <div>
+        <label class="font-semibold block mb-1">Director</label>
+        <select name="director" class="w-full border rounded p-2">
+            <option value="">Any</option>
+            {% for d in directors %}
+                <option value="{{ d }}" {% if d == selected_director %}selected{% endif %}>{{ d }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Writer -->
+    <div>
+        <label class="font-semibold block mb-1">Writer</label>
+        <select name="writer" class="w-full border rounded p-2">
+            <option value="">Any</option>
+            {% for w in writers %}
+                <option value="{{ w }}" {% if w == selected_writer %}selected{% endif %}>{{ w }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Starring -->
+    <div>
+        <label class="font-semibold block mb-1">Starring</label>
+        <select name="starring" class="w-full border rounded p-2">
+            <option value="">Any</option>
+            {% for s in starring_list %}
+                <option value="{{ s }}" {% if s == selected_starring %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Streaming -->
+    <div>
+        <label class="font-semibold block mb-1">Streaming</label>
+        <select name="streaming" class="w-full border rounded p-2">
+            <option value="">All</option>
+            {% for s in streaming_services %}
+                <option value="{{ s.id }}" {% if selected_streaming == s.id|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Recommender -->
+    <div>
+        <label class="font-semibold block mb-1">Recommended by</label>
+        <select name="recommended_by" class="w-full border rounded p-2">
+            <option value="">All</option>
+            {% for u in recommenders %}
+                <option value="{{ u.id }}" {% if selected_recommender == u.id|stringformat:"s" %}selected{% endif %}>{{ u.first_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        Apply Filters
+    </button>
+</form>
