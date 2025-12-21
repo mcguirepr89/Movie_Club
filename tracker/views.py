@@ -30,6 +30,7 @@ def movie_list(request):
 
     # --- Filters ---
     # Seen/Unseen
+    seen_filter = ""
     if request.user.is_authenticated:
         seen_filter = request.GET.get("seen")
         if seen_filter == "1":
@@ -99,7 +100,7 @@ def movie_list(request):
         "streaming_services": streaming_services,
         "recommenders": recommenders,
         "sort": sort_key,
-        "selected_seen": seen_filter or "",
+        "selected_seen": seen_filter,
         "selected_categories": category_ids,
         "selected_director": director_filter,
         "selected_writer": writer_filter,
