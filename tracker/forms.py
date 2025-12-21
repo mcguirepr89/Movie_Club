@@ -1,6 +1,6 @@
 import datetime
 from django import forms
-from .models import Movie, Viewing
+from .models import Movie, Viewing, Category
 
 YEAR_CHOICES = (
     [('', 'Not sure')] +
@@ -72,6 +72,10 @@ class MovieForm(TailwindFormMixin, forms.ModelForm):
             "streaming_services": forms.CheckboxSelectMultiple(),
             "description": forms.Textarea(attrs={"rows": 4}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["categories"].queryset = Category.objects.order_by("name")
 
 
 class ViewingForm(TailwindFormMixin, forms.ModelForm):
