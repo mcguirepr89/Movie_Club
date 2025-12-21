@@ -81,7 +81,7 @@ def movie_list(request):
             viewing_map.setdefault(v.movie_id, []).append(v)
 
     # --- Filter data for dropdowns ---
-    categories = Category.objects.all()
+    categories = Category.objects.all().order_by("name")
     streaming_services = StreamingService.objects.all()
     recommenders = User.objects.filter(recommended_movies__isnull=False).distinct()
     writers = Movie.objects.exclude(writer="").values_list("writer", flat=True).distinct()
