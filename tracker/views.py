@@ -256,7 +256,7 @@ def toggle_seen(request, movie_id):
     return redirect("movie_list")
 
 def movie_suggest(request):
-    categories = Category.objects.all()
+    categories = Category.objects.all().order_by("name")
 
     writers = Movie.objects.exclude(writer__exact="").values_list(
         "writer", flat=True
