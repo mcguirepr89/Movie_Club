@@ -46,11 +46,11 @@ def movie_list(request):
     # Director / Writer / Starring filters
     director_filter = request.GET.get("director", "")
     if director_filter:
-        movies = movies.filter(director=director_filter)
+        movies = movies.filter(director__icontains=director_filter)
 
     writer_filter = request.GET.get("writer", "")
     if writer_filter:
-        movies = movies.filter(writer=writer_filter)
+        movies = movies.filter(writer__icontains=writer_filter)
 
     starring_filter = request.GET.get("starring", "")
     if starring_filter:
@@ -84,8 +84,16 @@ def movie_list(request):
     categories = Category.objects.all().order_by("name")
     streaming_services = StreamingService.objects.all()
     recommenders = User.objects.filter(recommended_movies__isnull=False).distinct()
-    writers = Movie.objects.exclude(writer="").values_list("writer", flat=True).distinct()
-    directors = Movie.objects.exclude(director="").values_list("director", flat=True).distinct()
+    writers = sorted({
+        a.strip()
+        for s in Movie.objects.exclude(writer="").values_list("writer", flat=True)
+        for a in s.split(",")
+    })
+    directors = sorted({
+        a.strip()
+        for s in Movie.objects.exclude(director="").values_list("director", flat=True)
+        for a in s.split(",")
+    })
     starring_list = sorted({
         a.strip()
         for s in Movie.objects.exclude(starring="").values_list("starring", flat=True)
