@@ -11,11 +11,13 @@
     {% endif %} 
     <h2 class="text-2xl font-bold mb-4 flex items-center">
         {{ movie.title }}
+    {% if user.is_authenticated %}
         {% if current_user_viewing %}
             <span class="text-green-600 font-bold ml-2">✅</span>
         {% else %}
             <span class="text-gray-400 font-bold ml-2">❌</span>
         {% endif %}
+    {% endif %}
     </h2>
 
     <div class="bg-white rounded-lg shadow p-5 mb-6 space-y-2">
